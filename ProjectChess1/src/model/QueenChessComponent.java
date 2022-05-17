@@ -235,7 +235,11 @@ public class QueenChessComponent extends ChessComponent{
                 break;
             }
             if (!(chessComponents[x+i][y+i] instanceof EmptySlotComponent
-                    ||(chessComponents[x+i][y+i] instanceof KingChessComponent&&chessComponents[x+i][y+i].chessColor!=chessColor))){
+                    ||chessComponents[x+i][y+i] instanceof KingChessComponent)){
+                list1.add(new ChessboardPoint(x+i,y+i));
+                break;
+            }
+            if (chessComponents[x+i][y+i] instanceof KingChessComponent&&chessComponents[x+i][y+i].chessColor==chessColor){
                 list1.add(new ChessboardPoint(x+i,y+i));
                 break;
             }
@@ -246,7 +250,11 @@ public class QueenChessComponent extends ChessComponent{
                 break;
             }
             if (!(chessComponents[x+i][y+i] instanceof EmptySlotComponent
-                    ||(chessComponents[x+i][y+i] instanceof KingChessComponent&&chessComponents[x+i][y+i].chessColor!=chessColor))){
+                    ||chessComponents[x+i][y+i] instanceof KingChessComponent)){
+                list1.add(new ChessboardPoint(x+i,y+i));
+                break;
+            }
+            if (chessComponents[x+i][y+i] instanceof KingChessComponent&&chessComponents[x+i][y+i].chessColor==chessColor){
                 list1.add(new ChessboardPoint(x+i,y+i));
                 break;
             }
@@ -257,7 +265,11 @@ public class QueenChessComponent extends ChessComponent{
                 break;
             }
             if (!(chessComponents[x-i][y+i] instanceof EmptySlotComponent
-                    ||(chessComponents[x-i][y+i] instanceof KingChessComponent&&chessComponents[x-i][y+i].chessColor!=chessColor))){
+                    ||chessComponents[x-i][y+i] instanceof KingChessComponent)){
+                list1.add(new ChessboardPoint(x-i,y+i));
+                break;
+            }
+            if (chessComponents[x-i][y+i] instanceof KingChessComponent&&chessComponents[x-i][y+i].chessColor==chessColor){
                 list1.add(new ChessboardPoint(x-i,y+i));
                 break;
             }
@@ -268,7 +280,11 @@ public class QueenChessComponent extends ChessComponent{
                 break;
             }
             if (!(chessComponents[x-i][y+i] instanceof EmptySlotComponent
-                    ||(chessComponents[x-i][y+i] instanceof KingChessComponent&&chessComponents[x-i][y+i].chessColor!=chessColor))){
+                    ||chessComponents[x-i][y+i] instanceof KingChessComponent)){
+                list1.add(new ChessboardPoint(x-i,y+i));
+                break;
+            }
+            if (chessComponents[x-i][y+i] instanceof KingChessComponent&&chessComponents[x-i][y+i].chessColor==chessColor){
                 list1.add(new ChessboardPoint(x-i,y+i));
                 break;
             }

@@ -17,7 +17,7 @@ public class ChessGameFrame extends JFrame {
 
     Chessboard chessboard;
     JLabel label = new JLabel();
-    private String str = "Current action player : "+chessboard.getCurrentColor();
+    private String str = "Current action player : ";
     public ChessGameFrame(int Width, int Height){
         setTitle("CS102A FinalProject : Chess");
         this.Height = Height;
@@ -66,6 +66,7 @@ public class ChessGameFrame extends JFrame {
             repaint();
             label.repaint();
             chessboard.initiateTheNormalGame();
+
         });
 
         //button3为储存按钮

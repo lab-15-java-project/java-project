@@ -136,7 +136,7 @@ public class KingChessComponent extends ChessComponent {
         }
         System.out.println("-----------");
         if (x+1<8&&y>0){
-            if ( chessColor != chessComponents[x + 1][y-1].chessColor&&checkMate(x+1,-1,arrayList)){
+            if ( chessColor != chessComponents[x + 1][y-1].chessColor&&checkMate(x+1,y-1,arrayList)){
                 list.add(new ChessboardPoint(x+1,y-1));
                 System.out.println("7");
             }
