@@ -82,6 +82,8 @@ public class Chessboard extends JComponent{
         int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
         chessComponents[row2][col2] = chess2;
         arrayList.add(chessComponents[row2][col2]);
+        chess1.repaint();
+        chess2.repaint();
         for (int i=0;i<arrayList.size();i++){
             arrayList.get(i).getList1().subList(0,arrayList.get(i).getList1().size()).clear();
             arrayList.get(i).getList().subList(0,arrayList.get(i).getList().size()).clear();
@@ -106,7 +108,8 @@ public class Chessboard extends JComponent{
                         System.out.println("checkmate");
                         checkmateChess.add(arrayList.get(i));
                         kingLocation=arrayList.get(index1).getChessboardPoint();
-                        break;
+                        arrayList.get(index1).getList().subList(0,arrayList.get(index1).getList().size()).clear();
+                        arrayList.get(index1).getCanMoveTo(chessComponents,arrayList,this);
                     }
                 }
             }
@@ -120,13 +123,47 @@ public class Chessboard extends JComponent{
                         System.out.println("checkmate");
                         checkmateChess.add(arrayList.get(i));
                         kingLocation=arrayList.get(index2).getChessboardPoint();
-                        break;
+                        arrayList.get(index2).getList().subList(0,arrayList.get(index2).getList().size()).clear();
+                        arrayList.get(index2).getCanMoveTo(chessComponents,arrayList,this);
                     }
                 }
             }
         }
-        chess1.repaint();
-        chess2.repaint();
+        if (checkMating){
+            for (int i=0;i<arrayList.size();i++){
+                arrayList.get(i).getSpecialList().subList(0,arrayList.get(i).getSpecialList().size()).clear();
+                arrayList.get(i).specialGetCanMoveTo(chessComponents,arrayList,this);
+            }
+        }
+        if (arrayList.get(index1).getChessColor()!=currentColor&&arrayList.get(index1).getList().size()==0&&checkMating){
+            for (int i=0;i<arrayList.size();i++){
+                if (i==index1){continue;}
+                if (arrayList.get(i).getChessColor()==arrayList.get(index1).getChessColor()&&arrayList.get(i).getSpecialList().size()!=0){
+                    return;
+                }
+            }
+            String s="The "+ currentColor+" wins!!!";
+            JOptionPane.showMessageDialog(null, s);
+            return;
+        }
+        if (arrayList.get(index2).getChessColor()!=currentColor&&arrayList.get(index2).getList().size()==0&&checkMating){
+            for (int i=0;i<arrayList.size();i++){
+                if (i==index2){continue;}
+                if (arrayList.get(i).getChessColor()==arrayList.get(index2).getChessColor()&&arrayList.get(i).getSpecialList().size()!=0){
+                    return;
+                }
+            }
+            String s="The "+ currentColor+" wins!!!";
+            JOptionPane.showMessageDialog(null, s);
+            return;
+        }
+        if (arrayList.get(index1) instanceof KingChessComponent&&arrayList.get(index1).getChessColor()!=currentColor&&arrayList.get(index1).getList().size()==0){
+            JOptionPane.showMessageDialog(null, "draw");
+            return;
+        }
+        if (arrayList.get(index2) instanceof KingChessComponent&&arrayList.get(index1).getChessColor()!=currentColor&&arrayList.get(index2).getList().size()==0){
+            JOptionPane.showMessageDialog(null, "draw");
+        }
     }
 
     public void swapColor() {
@@ -144,26 +181,28 @@ public class Chessboard extends JComponent{
 
     public void initiateTheNormalGame(){
         initiateEmptyChessboard();
-        initRookOnBoard(0,0, ChessColor.BLACK);
-        initRookOnBoard(0,7,ChessColor.BLACK);
+        //initRookOnBoard(0,0, ChessColor.BLACK);
+        //initRookOnBoard(0,7,ChessColor.BLACK);
         initRookOnBoard(7,0,ChessColor.WHITE);
         initRookOnBoard(7,7,ChessColor.WHITE);
         initKingOnBoard(0,3,ChessColor.BLACK);
         initKingOnBoard(7,3,ChessColor.WHITE);
-        initQueenOnBoard(0,4,ChessColor.BLACK);
+        //initQueenOnBoard(0,4,ChessColor.BLACK);
         initQueenOnBoard(7,4,ChessColor.WHITE);
-        for (int i = 0; i < 8; i++) {
-            initPawnOnBoard(1,i,ChessColor.BLACK);
-            initPawnOnBoard(6,i,ChessColor.WHITE);
-        }
-        initKnightOnBoard(0,1,ChessColor.BLACK);
-        initKnightOnBoard(0,6,ChessColor.BLACK);
+        //for (int i = 0; i < 8; i++) {
+           // initPawnOnBoard(1,i,ChessColor.BLACK);
+            //initPawnOnBoard(6,i,ChessColor.WHITE);
+       // }
+        //initKnightOnBoard(0,1,ChessColor.BLACK);
+        //initKnightOnBoard(0,6,ChessColor.BLACK);
         initKnightOnBoard(7,1,ChessColor.WHITE);
-        initKnightOnBoard(7,6,ChessColor.WHITE);
-        initBishopOnBoard(0,2,ChessColor.BLACK);
-        initBishopOnBoard(0,5,ChessColor.BLACK);
+        //initKnightOnBoard(7,6,ChessColor.WHITE);
+        //initBishopOnBoard(0,2,ChessColor.BLACK);
+        //initBishopOnBoard(0,5,ChessColor.BLACK);
         initBishopOnBoard(7,2,ChessColor.WHITE);
-        initBishopOnBoard(7,5,ChessColor.WHITE);
+        //initBishopOnBoard(7,5,ChessColor.WHITE);
+        checkMating=false;
+        checkmateChess.clear();
     }
 
     @Override

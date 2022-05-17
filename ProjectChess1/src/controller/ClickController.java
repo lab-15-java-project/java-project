@@ -52,7 +52,6 @@ public class ClickController {
      */
 
     private boolean handleSecond(ChessComponent chessComponent) {
-        System.out.println(chessboard.getArrayList().size());
         return chessComponent.getChessColor() != chessboard.getCurrentColor() &&
                 first.canMoveTo(chessboard.getChessComponents(), chessComponent.getChessboardPoint(),chessboard.getArrayList(),chessboard);
     }

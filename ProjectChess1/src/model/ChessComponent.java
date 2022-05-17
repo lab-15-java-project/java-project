@@ -42,7 +42,7 @@ public abstract class ChessComponent extends JComponent {
      * selected: 表示这个棋子是否被选中
      */
     private ChessboardPoint chessboardPoint;
-    protected final ChessColor chessColor;
+    protected ChessColor chessColor;
     private boolean selected;
 
     protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
@@ -159,14 +159,20 @@ public abstract class ChessComponent extends JComponent {
 
     public abstract List<ChessboardPoint> getList();
     public abstract List<ChessboardPoint> getList1();
+
+    public List<ChessboardPoint> getSpecialList() {
+        return specialList;
+    }
+
     /*
-在将军时使用的移动规则
- */
+    在将军时使用的移动规则
+     */
     public  void specialGetCanMoveTo(ChessComponent[][] chessComponents,List<ChessComponent> arrayList, Chessboard chessboard){
         if (chessboard.getCheckMating()) {
             if (chessboard.getCheckmateChess().size()==1) {
                 int x = chessboard.getCheckmateChess().get(0).getChessboardPoint().getX();
                 int y = chessboard.getCheckmateChess().get(0).getChessboardPoint().getY();
+                //通过吃子化解将军
                 for (ChessboardPoint chessboardPoint : list) {
                     if (x == chessboardPoint.getX() && y == chessboardPoint.getY()) {
                         specialList.add(new ChessboardPoint(x, y));
@@ -211,7 +217,53 @@ public abstract class ChessComponent extends JComponent {
                                 }
                             }
                         }
-                        if (chessboard.getKingLocation().getX()-x==-chessboard.getKingLocation().getY()-y){
+                        if (chessboard.getKingLocation().getX()-x==-chessboard.getKingLocation().getY()+y){
+                            for (int i=1;i<Math.abs(chessboard.getKingLocation().getY()-y);i++){
+                                for (int j=0;j<list.size();j++){
+                                    if (Math.min(y,chessboard.getKingLocation().getY())+i==list.get(j).getY()
+                                            &&Math.max(x,chessboard.getKingLocation().getX())-i==list.get(j).getX()){
+                                        specialList.add(new ChessboardPoint(Math.max(x,chessboard.getKingLocation().getX())-i, Math.min(y,chessboard.getKingLocation().getY())+i));
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (chessboard.getCheckmateChess().get(0) instanceof QueenChessComponent){
+                        if (y==chessboard.getKingLocation().getY()){
+                            for (int i=1;i<Math.abs(chessboard.getKingLocation().getX()-x);i++){
+                                for (int j=0;j<list.size();j++){
+                                    if (Math.min(x,chessboard.getKingLocation().getX())+i==list.get(j).getX()
+                                            &&y==list.get(j).getY()){
+                                        specialList.add(new ChessboardPoint(Math.min(x,chessboard.getKingLocation().getX())+i, y));
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (x==chessboard.getKingLocation().getX()){
+                            for (int i=1;i<Math.abs(chessboard.getKingLocation().getY()-y);i++){
+                                for (int j=0;j<list.size();j++){
+                                    if (Math.min(y,chessboard.getKingLocation().getY())+i==list.get(j).getY()
+                                            &&x==list.get(j).getX()){
+                                        specialList.add(new ChessboardPoint(x, Math.min(y,chessboard.getKingLocation().getY())+i));
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (chessboard.getKingLocation().getX()-x==chessboard.getKingLocation().getY()-y) {
+                            for (int i = 1; i < Math.abs(chessboard.getKingLocation().getX() - x); i++) {
+                                for (int j = 0; j < list.size(); j++) {
+                                    if (Math.min(x, chessboard.getKingLocation().getX()) + i == list.get(j).getX()
+                                            && Math.min(y, chessboard.getKingLocation().getY()) + i == list.get(j).getY()) {
+                                        specialList.add(new ChessboardPoint(Math.min(x, chessboard.getKingLocation().getX()) + i, Math.min(y, chessboard.getKingLocation().getY()) + i));
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (chessboard.getKingLocation().getX()-x==-chessboard.getKingLocation().getY()+y){
                             for (int i=1;i<Math.abs(chessboard.getKingLocation().getY()-y);i++){
                                 for (int j=0;j<list.size();j++){
                                     if (Math.min(y,chessboard.getKingLocation().getY())+i==list.get(j).getY()
@@ -224,150 +276,313 @@ public abstract class ChessComponent extends JComponent {
                         }
                     }
                 }
-                if (chessboard.getCheckmateChess().get(0) instanceof QueenChessComponent){
-                    if (y==chessboard.getKingLocation().getY()){
-                        for (int i=1;i<Math.abs(chessboard.getKingLocation().getX()-x);i++){
-                            for (int j=0;j<list.size();j++){
-                                if (Math.min(x,chessboard.getKingLocation().getX())+i==list.get(j).getX()
-                                        &&y==list.get(j).getY()){
-                                    specialList.add(new ChessboardPoint(Math.min(x,chessboard.getKingLocation().getX())+i, y));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (x==chessboard.getKingLocation().getX()){
-                        for (int i=1;i<Math.abs(chessboard.getKingLocation().getY()-y);i++){
-                            for (int j=0;j<list.size();j++){
-                                if (Math.min(y,chessboard.getKingLocation().getY())+i==list.get(j).getY()
-                                        &&x==list.get(j).getX()){
-                                    specialList.add(new ChessboardPoint(x, Math.min(y,chessboard.getKingLocation().getY())+i));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (chessboard.getKingLocation().getX()-x==chessboard.getKingLocation().getY()-y) {
-                        for (int i = 1; i < Math.abs(chessboard.getKingLocation().getX() - x); i++) {
-                            for (int j = 0; j < list.size(); j++) {
-                                if (Math.min(x, chessboard.getKingLocation().getX()) + i == list.get(j).getX()
-                                        && Math.min(y, chessboard.getKingLocation().getY()) + i == list.get(j).getY()) {
-                                    specialList.add(new ChessboardPoint(Math.min(x, chessboard.getKingLocation().getX()) + i, Math.min(y, chessboard.getKingLocation().getY()) + i));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (chessboard.getKingLocation().getX()-x==-chessboard.getKingLocation().getY()-y){
-                        for (int i=1;i<Math.abs(chessboard.getKingLocation().getY()-y);i++){
-                            for (int j=0;j<list.size();j++){
-                                if (Math.min(y,chessboard.getKingLocation().getY())+i==list.get(j).getY()
-                                        &&Math.max(x,chessboard.getKingLocation().getX())-i==list.get(j).getX()){
-                                    specialList.add(new ChessboardPoint(Math.max(x,chessboard.getKingLocation().getX())-i, Math.min(y,chessboard.getKingLocation().getY())+i));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
     public  void willCheckmate(ChessComponent[][] chessComponents,List<ChessComponent> arrayList, Chessboard chessboard){
-        int index=0;
-        for (int i=0;i<arrayList.size();i++){
-            if (arrayList.get(i) instanceof KingChessComponent&&arrayList.get(i).chessColor==chessColor){
-                index=i;
-                break;
-            }
-        }
+        boolean a=false;
         int x=getChessboardPoint().getX();
         int y=getChessboardPoint().getY();
         for (int i=0;i<arrayList.size();i++){
-            if (chessColor!=arrayList.get(i).chessColor&&arrayList.get(i)instanceof BishopChessComponent
-                    &&arrayList.get(i)instanceof RookChessComponent&&arrayList.get(i)instanceof QueenChessComponent){
-                if (arrayList.get(i)instanceof RookChessComponent&&x==arrayList.get(i).getChessboardPoint().getX()
-                        &&arrayList.get(index).getChessboardPoint().getX()==x){
-                    int k=0;
-                    while (k<list.size()){
-                        if (list.get(k).getX()!=x){
-                            list.remove(k);
-                        }
-                        else {k++;}
+            if (chessColor!=arrayList.get(i).chessColor&&(arrayList.get(i)instanceof BishopChessComponent
+                    ||arrayList.get(i)instanceof RookChessComponent||arrayList.get(i)instanceof QueenChessComponent)){
+                for (int j=0;j<arrayList.get(i).getList().size();j++){
+                    if (x==arrayList.get(i).getList().get(j).getX()&&y==arrayList.get(i).getList().get(j).getY()){
+                        a=true;
+                        break;
                     }
                 }
-                if (arrayList.get(i)instanceof RookChessComponent&&y==arrayList.get(i).getChessboardPoint().getY()
-                        &&arrayList.get(index).getChessboardPoint().getY()==y){
-                    int k=0;
-                    while (k<list.size()){
-                        if (list.get(k).getY()!=y){
-                            list.remove(k);
+                if (!a){continue;}
+                if (arrayList.get(i)instanceof RookChessComponent&&x==arrayList.get(i).getChessboardPoint().getX()){
+                    if (y<arrayList.get(i).getChessboardPoint().getY()){
+                        for (int j=1;y-j>=0;j++){
+                            if (chessComponents[x][y-j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()!=x){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x][y-j]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (y>arrayList.get(i).getChessboardPoint().getY()){
+                        for (int j=1;y+j<=7;j++){
+                            if (chessComponents[x][y+j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()!=x){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x][y+j]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (arrayList.get(i)instanceof RookChessComponent&&y==arrayList.get(i).getChessboardPoint().getY()){
+                    if (x<arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x-j>=0;j++){
+                            if (chessComponents[x-j][y]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getY()!=y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x-j][y]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
+                    }
+                    if (x>arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x+j<=7;j++){
+                            if (chessComponents[x+j][y]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getY()!=y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x+j][y]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
                 if (arrayList.get(i)instanceof BishopChessComponent
-                        &&x-arrayList.get(i).getChessboardPoint().getX()==y-arrayList.get(i).getChessboardPoint().getY()
-                        &&x-arrayList.get(index).getChessboardPoint().getX()==y-arrayList.get(index).getChessboardPoint().getY()){
-                    int k=0;
-                    while (k<list.size()){
-                        if (x-list.get(k).getX()!=y-list.get(k).getY()){
-                            list.remove(k);
+                        &&x-arrayList.get(i).getChessboardPoint().getX()==y-arrayList.get(i).getChessboardPoint().getY()){
+                    if (x<arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x-j>=0&&y-j>=0;j++){
+                            if (chessComponents[x-j][y-j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=list.get(k).getY()-y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x-j][y-j]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (x>arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x+j<=7&&y+j<=7;j++){
+                            if (chessComponents[x+j][y+j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=list.get(k).getY()-y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x+j][y+j]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
                 if (arrayList.get(i)instanceof BishopChessComponent
-                        &&x-arrayList.get(i).getChessboardPoint().getX()==arrayList.get(i).getChessboardPoint().getY()-y
-                        &&x-arrayList.get(index).getChessboardPoint().getX()==arrayList.get(index).getChessboardPoint().getY()-y){
-                    int k=0;
-                    while (k<list.size()){
-                        if (x-list.get(k).getX()!=list.get(k).getY()-y){
-                            list.remove(k);
+                        &&x-arrayList.get(i).getChessboardPoint().getX()==arrayList.get(i).getChessboardPoint().getY()-y){
+                    if (x<arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x-j>=0&&y+j<=7;j++){
+                            if (chessComponents[x-j][y+j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=y-list.get(k).getY()){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x-j][y+j]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (x>arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x+j<=7&&y-j>=0;j++){
+                            if (chessComponents[x+j][y-j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=y-list.get(k).getY()){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x+j][y-j]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
-                if (arrayList.get(i)instanceof QueenChessComponent&&x==arrayList.get(i).getChessboardPoint().getX()
-                        &&arrayList.get(index).getChessboardPoint().getX()==x){
-                    int k=0;
-                    while (k<list.size()){
-                        if (list.get(k).getX()!=x){
-                            list.remove(k);
+                if (arrayList.get(i)instanceof QueenChessComponent&&x==arrayList.get(i).getChessboardPoint().getX()){
+                    if (y<arrayList.get(i).getChessboardPoint().getY()){
+                        for (int j=1;y-j>=0;j++){
+                            if (chessComponents[x][y-j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()!=x){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x][y-j]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (y>arrayList.get(i).getChessboardPoint().getY()){
+                        for (int j=1;y+j<=7;j++){
+                            if (chessComponents[x][y+j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()!=x){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x][y+j]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
-                if (arrayList.get(i)instanceof QueenChessComponent&&y==arrayList.get(i).getChessboardPoint().getY()
-                        &&arrayList.get(index).getChessboardPoint().getY()==y){
-                    int k=0;
-                    while (k<list.size()){
-                        if (list.get(k).getY()!=y){
-                            list.remove(k);
+                if (arrayList.get(i)instanceof QueenChessComponent&&y==arrayList.get(i).getChessboardPoint().getY()){
+                    if (x<arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x-j>=0;j++){
+                            if (chessComponents[x-j][y]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getY()!=y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x-j][y]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (x>arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x+j<=7;j++){
+                            if (chessComponents[x+j][y]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getY()!=y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x+j][y]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
                 if (arrayList.get(i)instanceof QueenChessComponent
-                        &&x-arrayList.get(i).getChessboardPoint().getX()==y-arrayList.get(i).getChessboardPoint().getY()
-                        &&x-arrayList.get(index).getChessboardPoint().getX()==y-arrayList.get(index).getChessboardPoint().getY()){
-                    int k=0;
-                    while (k<list.size()){
-                        if (x-list.get(k).getX()!=y-list.get(k).getY()){
-                            list.remove(k);
+                        &&x-arrayList.get(i).getChessboardPoint().getX()==y-arrayList.get(i).getChessboardPoint().getY()){
+                    if (x<arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x-j>=0&&y-j>=0;j++){
+                            if (chessComponents[x-j][y-j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=list.get(k).getY()-y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x-j][y-j]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (x>arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x+j<=7&&y+j<=7;j++){
+                            if (chessComponents[x+j][y+j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=list.get(k).getY()-y){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x+j][y+j]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
                 if (arrayList.get(i)instanceof QueenChessComponent
-                        &&x-arrayList.get(i).getChessboardPoint().getX()==arrayList.get(i).getChessboardPoint().getY()-y
-                        &&x-arrayList.get(index).getChessboardPoint().getX()==arrayList.get(index).getChessboardPoint().getY()-y){
-                    int k=0;
-                    while (k<list.size()){
-                        if (x-list.get(k).getX()!=list.get(k).getY()-y){
-                            list.remove(k);
+                        &&x-arrayList.get(i).getChessboardPoint().getX()==arrayList.get(i).getChessboardPoint().getY()-y){
+                    if (x<arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x-j>=0&&y+j<=7;j++){
+                            if (chessComponents[x-j][y+j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=y-list.get(k).getY()){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x-j][y+j]instanceof EmptySlotComponent)){
+                                break;
+                            }
                         }
-                        else {k++;}
+                    }
+                    if (x>arrayList.get(i).getChessboardPoint().getX()){
+                        for (int j=1;x+j<=7&&y-j>=0;j++){
+                            if (chessComponents[x+j][y-j]instanceof KingChessComponent){
+                                int k=0;
+                                while (k<list.size()){
+                                    if (list.get(k).getX()-x!=y-list.get(k).getY()){
+                                        list.remove(k);
+                                    }
+                                    else {k++;}
+                                }
+                                break;
+                            }
+                            if (!(chessComponents[x+j][y-j]instanceof EmptySlotComponent)){
+                                break;
+                            }
+                        }
                     }
                 }
             }
