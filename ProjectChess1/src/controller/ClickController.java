@@ -3,6 +3,8 @@ package controller;
 import model.ChessComponent;
 import view.Chessboard;
 
+import javax.swing.*;
+
 
 public class ClickController {
     private  Chessboard chessboard;
@@ -33,6 +35,9 @@ public class ClickController {
 
                 first.setSelected(false);
                 first = null;
+                if (chessboard.getCheckMating()){
+                    JOptionPane.showMessageDialog(null,"checkmate!","situation",JOptionPane.WARNING_MESSAGE );
+                }
             }
         }
     }
