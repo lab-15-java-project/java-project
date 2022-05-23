@@ -18,6 +18,7 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
 
     private Image PawnImage;
     private List<ChessboardPoint> defeatRange=new ArrayList<>();
+    private int move=0;
 
     //读取加载车棋子的图片
     public void loadResource() throws IOException {
@@ -28,6 +29,10 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
         if (Pawn_BLACK == null) {
             Pawn_BLACK = ImageIO.read(new File("./images/pawn-black.png"));
         }
+    }
+
+    public int getMove() {
+        return move;
     }
 
     private void initiatePawnImage(ChessColor color) {
@@ -49,15 +54,6 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
     }
 
 
-    @Override
-    public void swapLocation(ChessComponent another) {
-        ChessboardPoint chessboardPoint1 = getChessboardPoint(), chessboardPoint2 = another.getChessboardPoint();
-        Point point1 = getLocation(), point2 = another.getLocation();
-        setChessboardPoint(chessboardPoint2);
-        setLocation(point2);
-        another.setChessboardPoint(chessboardPoint1);
-        another.setLocation(point1);
-    }
 
     /**
      * 注意这个方法，每当窗体受到了形状的变化，或者是通知要进行绘图的时候，就会调用这个方法进行画图。
@@ -82,7 +78,34 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
         }
         else return "p";
     }
-
+    @Override
+    public  boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination, List<ChessComponent> arrayList, Chessboard chessboard){
+        list.subList(0,list.size()).clear();
+        getCanMoveTo(chessComponents,arrayList,chessboard);
+        if (chessboard.getCheckMating()){
+            specialGetCanMoveTo(chessComponents,arrayList,chessboard);
+            for (int i=0;i<specialList.size();i++){
+                if (specialList.get(i).getX()==destination.getX()&&specialList.get(i).getY()==destination.getY()){
+                    specialList.subList(0, specialList.size()).clear();
+                    list.subList(0,list.size()).clear();
+                    move++;
+                    return true;
+                }
+            }
+            specialList.subList(0, specialList.size()).clear();
+            list.subList(0,list.size()).clear();
+            return false;
+        }
+        for (int i=0;i<list.size();i++){
+            if (list.get(i).getX()==destination.getX()&&list.get(i).getY()==destination.getY()){
+                list.subList(0, list.size()).clear();
+                move++;
+                return true;
+            }
+        }
+        list.subList(0, list.size()).clear();
+        return false;
+    }
     @Override
     public List<ChessboardPoint> getCanMoveTo(ChessComponent[][] chessComponents, List<ChessComponent> arrayList, Chessboard chessboard) {
         list1.subList(0,list1.size()).clear();

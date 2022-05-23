@@ -16,8 +16,9 @@ public class ChessGameFrame extends JFrame {
     private GameController gameController;
 
     Chessboard chessboard;
+    private ClickController clickController=new ClickController(this);
+
     JLabel label = new JLabel();
-    private String str = "Current action player : ";
     public ChessGameFrame(int Width, int Height){
         setTitle("CS102A FinalProject : Chess");
         this.Height = Height;
@@ -31,11 +32,8 @@ public class ChessGameFrame extends JFrame {
 
         JFileChooser jFileChooser = new JFileChooser("./");
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-
-        addChessboard();
-
-        changeCurrentPlayer();
-
+        chessboard.setX(Width);
+        chessboard.setY(Height);
         //button1为加载按钮
         JButton button1 = new JButton("Load Game");
         button1.setLocation(Height + 100, Height / 10 + 220);
@@ -61,8 +59,10 @@ public class ChessGameFrame extends JFrame {
         button2.setSize(195, 40);
         button2.setFont(new Font("Times New Roman", Font.BOLD, 20));
         add(button2);
-
         button2.addActionListener(e -> {
+            int optionDialog= JOptionPane.showOptionDialog(null, "Who comes first?", "Start", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"BLACK", "WHITE"}, "BLACK");
+            chessboard.setCurrentColor(optionDialog==0?ChessColor.BLACK:ChessColor.WHITE);
+            changeCurrentPlayer("Current action player : "+chessboard.getCurrentColor());
             repaint();
             label.repaint();
             chessboard.initiateTheNormalGame();
@@ -123,15 +123,17 @@ public class ChessGameFrame extends JFrame {
 
     private void addChessboard() {
         chessboard = new Chessboard(ChessBoard_size, ChessBoard_size);
-        gameController = new GameController(chessboard);
+        gameController = new GameController(chessboard,this);
         chessboard.setLocation(Height / 10, Height / 10);
         add(chessboard);
     }
-    public void changeCurrentPlayer(){
+    public void changeCurrentPlayer(String str){
         label.setText(str);
         label.setLocation(Height - 500,Height / 10 - 40);
         label.setSize(300,20);
         label.setFont(new Font("Times New Roman", Font.BOLD, 15));
         add(label);
+        repaint();
     }
+
 }

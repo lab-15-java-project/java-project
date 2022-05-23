@@ -33,6 +33,7 @@ public abstract class ChessComponent extends JComponent {
     protected List<ChessboardPoint> list=new ArrayList<>();
     protected List<ChessboardPoint> list1=new ArrayList<>();
     protected List<ChessboardPoint> specialList=new ArrayList<>();
+    protected String name;
 
     /**
      * chessboardPoint: 表示8*8棋盘中，当前棋子在棋格对应的位置，如(0, 0), (1, 0), (0, 7),(7, 7)等等
@@ -60,6 +61,11 @@ public abstract class ChessComponent extends JComponent {
 
     public void setChessboardPoint(ChessboardPoint chessboardPoint) {
         this.chessboardPoint = chessboardPoint;
+    }
+
+
+    public String getName() {
+        return name;
     }
 
     public ChessColor getChessColor() {
