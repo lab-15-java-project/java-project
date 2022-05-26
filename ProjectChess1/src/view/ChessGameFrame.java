@@ -67,7 +67,19 @@ public class ChessGameFrame extends JFrame {
             repaint();
             label.repaint();
             chessboard.initiateTheNormalGame();
+            JButton button5 = new JButton("Castling");
+            button5.setLocation(Height ,Height / 10 );
+            button5.setSize(195, 40);
+            button5.setFont(new Font("Times New Roman", Font.BOLD, 20));
+            add(button5);
+            button5.addActionListener(c -> {
+                int option= JOptionPane.showOptionDialog(null, "Castling?", "Start", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Castle Kingside", "Castle Queenside","Cancel"}, "Cancel");
+                switch (option){
+                    case 0:
 
+                        break;
+                }
+            });
         });
 
         //button3为储存按钮

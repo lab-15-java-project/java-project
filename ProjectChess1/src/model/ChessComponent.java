@@ -38,6 +38,7 @@ public abstract class ChessComponent extends JComponent {
     protected List<ChessboardPoint> list1=new ArrayList<>();
     protected List<ChessboardPoint> specialList=new ArrayList<>();
     protected String name;
+    protected boolean on;
 
     /**
      * chessboardPoint: 表示8*8棋盘中，当前棋子在棋格对应的位置，如(0, 0), (1, 0), (0, 7),(7, 7)等等
@@ -115,11 +116,13 @@ public abstract class ChessComponent extends JComponent {
         super.processMouseEvent(e);
 
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-            System.out.printf("Click [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
             clickController.onClick(this);
         }
         if (e.getID()==MouseEvent.MOUSE_ENTERED){
-
+            on=true;
+        }
+        if (e.getID()==MouseEvent.MOUSE_EXITED){
+            on=false;
         }
     }
 
@@ -170,8 +173,14 @@ public abstract class ChessComponent extends JComponent {
         if (!someoneSelected&&isDraw) {
             Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
             g.setColor(squareColor);
-            g.fillRect(24, 24, this.getWidth()/4, this.getHeight()/4);
+            g.fillOval(24, 24, this.getWidth()/4, this.getHeight()/4);
             isDraw=false;
+            chessboard.repaint();
+        }
+        if (on){
+            Color color=new Color(0,255,255,128);
+            g.setColor(color);
+            g.fillRect(0, 0, this.getWidth(), this.getHeight());
             chessboard.repaint();
         }
     }
