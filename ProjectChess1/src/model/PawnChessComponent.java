@@ -11,13 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PawnChessComponent extends ChessComponent implements Promotion{
+public class PawnChessComponent extends ChessComponent {
 
     private static Image Pawn_WHITE;
     private static Image Pawn_BLACK;
 
     private Image PawnImage;
     private List<ChessboardPoint> defeatRange=new ArrayList<>();
+    private int move=0;
 
     //读取加载车棋子的图片
     public void loadResource() throws IOException {
@@ -28,6 +29,10 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
         if (Pawn_BLACK == null) {
             Pawn_BLACK = ImageIO.read(new File("./images/pawn-black.png"));
         }
+    }
+
+    public int getMove() {
+        return move;
     }
 
     private void initiatePawnImage(ChessColor color) {
@@ -43,21 +48,12 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
         }
     }
 
-    public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
+    public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, color, listener, size,chessboard);
         initiatePawnImage(color);
     }
 
 
-    @Override
-    public void swapLocation(ChessComponent another) {
-        ChessboardPoint chessboardPoint1 = getChessboardPoint(), chessboardPoint2 = another.getChessboardPoint();
-        Point point1 = getLocation(), point2 = another.getLocation();
-        setChessboardPoint(chessboardPoint2);
-        setLocation(point2);
-        another.setChessboardPoint(chessboardPoint1);
-        another.setLocation(point1);
-    }
 
     /**
      * 注意这个方法，每当窗体受到了形状的变化，或者是通知要进行绘图的时候，就会调用这个方法进行画图。
@@ -82,7 +78,6 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
         }
         else return "p";
     }
-
     @Override
     public List<ChessboardPoint> getCanMoveTo(ChessComponent[][] chessComponents, List<ChessComponent> arrayList, Chessboard chessboard) {
         list1.subList(0,list1.size()).clear();

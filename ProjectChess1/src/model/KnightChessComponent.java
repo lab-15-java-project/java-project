@@ -41,8 +41,8 @@ public class KnightChessComponent extends ChessComponent{
         }
     }
 
-    public KnightChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
+    public KnightChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, color, listener, size,chessboard);
         initiateKnightImage(color);
     }
 
@@ -56,6 +56,7 @@ public class KnightChessComponent extends ChessComponent{
      */
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
 //        g.drawImage(KingImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(KnightImage, 0, 0, getWidth() , getHeight(), this);

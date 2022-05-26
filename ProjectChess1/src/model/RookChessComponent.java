@@ -57,8 +57,8 @@ public class RookChessComponent extends ChessComponent {
         }
     }
 
-    public RookChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
+    public RookChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, color, listener, size,chessboard);
         initiateRookImage(color);
     }
 
@@ -218,5 +218,4 @@ public class RookChessComponent extends ChessComponent {
     public List<ChessboardPoint> getList() {
         return list;
     }
-
 }

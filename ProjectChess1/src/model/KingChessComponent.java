@@ -42,22 +42,19 @@ public class KingChessComponent extends ChessComponent {
         }
     }
 
-    public KingChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
+    public KingChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, color, listener, size,chessboard);
         initiateKingImage(color);
     }
-
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination, List<ChessComponent> arrayList, Chessboard chessboard) {
         list.subList(0,list.size()).clear();
         getCanMoveTo(chessComponents,arrayList,chessboard);
         for (int i=0;i<list.size();i++){
             if (list.get(i).getX()==destination.getX()&&list.get(i).getY()==destination.getY()){
-                list.subList(0, list.size()).clear();
                 return true;
             }
         }
-        list.subList(0, list.size()).clear();
         return false;
     }
 
@@ -92,63 +89,46 @@ public class KingChessComponent extends ChessComponent {
         ChessboardPoint source=getChessboardPoint();
         int x=source.getX();
         int y=source.getY();
-        System.out.println("-----------");
         if (x<7){
             if ( chessColor != chessComponents[x + 1][y].chessColor&&checkMate(x+1,y,arrayList)){
                 list.add(new ChessboardPoint(x+1,y));
-                System.out.println("1");
             }
         }
-        System.out.println("-----------");
         if (x>0){
             if ( chessColor!= chessComponents[x -1][y].chessColor&&checkMate(x-1,y,arrayList)){
                 list.add(new ChessboardPoint(x-1,y));
-                System.out.println("2");
             }
         }
-        System.out.println("-----------");
         if (y+1<8){
             if ( chessColor != chessComponents[x][y+1].chessColor&&checkMate(x,y+1,arrayList)){
                 list.add(new ChessboardPoint(x,y+1));
-                System.out.println("3");
             }
         }
-        System.out.println("-----------");
         if (y>0){
             if ( chessColor!= chessComponents[x ][y-1].chessColor&&checkMate(x,y-1,arrayList)){
                 list.add(new ChessboardPoint(x,y-1));
-                System.out.println("4");
             }
         }
-        System.out.println("-----------");
         if (x+1<8&&y+1<8){
             if ( chessColor != chessComponents[x + 1][y+1].chessColor&&checkMate(x+1,y+1,arrayList)){
                 list.add(new ChessboardPoint(x+1,y+1));
-                System.out.println("5");
             }
         }
-        System.out.println("-----------");
         if (x>0&&y>0){
             if ( chessColor!= chessComponents[x -1][y-1].chessColor&&checkMate(x-1,y-1,arrayList)){
                 list.add(new ChessboardPoint(x-1,y-1));
-                System.out.println("6");
             }
         }
-        System.out.println("-----------");
         if (x+1<8&&y>0){
             if ( chessColor != chessComponents[x + 1][y-1].chessColor&&checkMate(x+1,y-1,arrayList)){
                 list.add(new ChessboardPoint(x+1,y-1));
-                System.out.println("7");
             }
         }
-        System.out.println("-----------");
         if (x>0&&y<7){
             if ( chessColor!= chessComponents[x -1][y+1].chessColor&&checkMate(x-1,y+1,arrayList)){
                 list.add(new ChessboardPoint(x-1,y+1));
-                System.out.println("8");
             }
         }
-        System.out.println("-----------");
         return list;
     }
 
