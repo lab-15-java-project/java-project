@@ -26,10 +26,14 @@ public abstract class ChessComponent extends JComponent {
 
    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
     private static final Color[] BACKGROUND_COLORS = {Color.WHITE, Color.BLACK};
+    Chessboard chessboard;
     /**
      * handle click event
      */
     private ClickController clickController;
+    private boolean isDraw;
+
+
     protected List<ChessboardPoint> list=new ArrayList<>();
     protected List<ChessboardPoint> list1=new ArrayList<>();
     protected List<ChessboardPoint> specialList=new ArrayList<>();
@@ -45,8 +49,9 @@ public abstract class ChessComponent extends JComponent {
     private ChessboardPoint chessboardPoint;
     protected ChessColor chessColor;
     private boolean selected;
+    private boolean someoneSelected;
 
-    protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
+    protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size,Chessboard chessboard) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         setLocation(location);
         setSize(size, size);
@@ -54,9 +59,15 @@ public abstract class ChessComponent extends JComponent {
         this.chessColor = chessColor;
         this.selected = false;
         this.clickController = clickController;
+        this.chessboard=chessboard;
+        this.someoneSelected=false;
     }
     public ChessboardPoint getChessboardPoint() {
         return chessboardPoint;
+    }
+
+    public void setSomeoneSelected(boolean someoneSelected) {
+        this.someoneSelected = someoneSelected;
     }
 
     public void setChessboardPoint(ChessboardPoint chessboardPoint) {
@@ -107,6 +118,9 @@ public abstract class ChessComponent extends JComponent {
             System.out.printf("Click [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
             clickController.onClick(this);
         }
+        if (e.getID()==MouseEvent.MOUSE_ENTERED){
+
+        }
     }
 
     /**
@@ -125,21 +139,17 @@ public abstract class ChessComponent extends JComponent {
             for (int i=0;i<specialList.size();i++){
                 if (specialList.get(i).getX()==destination.getX()&&specialList.get(i).getY()==destination.getY()){
                     specialList.subList(0, specialList.size()).clear();
-                    list.subList(0,list.size()).clear();
                     return true;
                 }
             }
             specialList.subList(0, specialList.size()).clear();
-            list.subList(0,list.size()).clear();
             return false;
         }
         for (int i=0;i<list.size();i++){
             if (list.get(i).getX()==destination.getX()&&list.get(i).getY()==destination.getY()){
-                list.subList(0, list.size()).clear();
                 return true;
             }
         }
-        list.subList(0, list.size()).clear();
         return false;
     }
 
@@ -149,7 +159,22 @@ public abstract class ChessComponent extends JComponent {
      * @throws IOException 如果一些资源找不到(如棋子图片路径错误)，就会抛出异常
      */
     public abstract void loadResource() throws IOException;
-
+    @Override
+    public void paint(Graphics g){
+        super.paint(g);
+        if (someoneSelected){
+            g.setColor(Color.RED);
+            g.fillOval(24, 24, this.getWidth()/4, this.getHeight()/4);
+            isDraw=true;
+        }
+        if (!someoneSelected&&isDraw) {
+            Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+            g.setColor(squareColor);
+            g.fillRect(24, 24, this.getWidth()/4, this.getHeight()/4);
+            isDraw=false;
+            chessboard.repaint();
+        }
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
@@ -158,6 +183,7 @@ public abstract class ChessComponent extends JComponent {
         g.setColor(squareColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
+
     @Override
     public abstract String toString();
     public abstract List<ChessboardPoint> getCanMoveTo(ChessComponent[][] chessComponents,List<ChessComponent> arrayList, Chessboard chessboard);
@@ -178,6 +204,8 @@ public abstract class ChessComponent extends JComponent {
             if (chessboard.getCheckmateChess().size()==1) {
                 int x = chessboard.getCheckmateChess().get(0).getChessboardPoint().getX();
                 int y = chessboard.getCheckmateChess().get(0).getChessboardPoint().getY();
+                chessboard.getCheckmateChess().get(0).getList().clear();
+                chessboard.getCheckmateChess().get(0).getCanMoveTo( chessComponents, arrayList,  chessboard);
                 //通过吃子化解将军
                 for (ChessboardPoint chessboardPoint : list) {
                     if (x == chessboardPoint.getX() && y == chessboardPoint.getY()) {

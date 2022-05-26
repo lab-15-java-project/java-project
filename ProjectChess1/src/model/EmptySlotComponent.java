@@ -13,9 +13,20 @@ import java.util.List;
  * 这个类表示棋盘上的空位置
  */
 public class EmptySlotComponent extends ChessComponent {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+//        g.drawImage(KingImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
+        g.drawImage(null, 0, 0, getWidth() , getHeight(), this);
+        g.setColor(Color.BLACK);
+        if (isSelected()) { // Highlights the model if selected.
+            g.setColor(Color.RED);
+            g.drawOval(0, 0, getWidth() , getHeight());
+        }
+    }
 
-    public EmptySlotComponent(ChessboardPoint chessboardPoint, Point location, ClickController listener, int size) {
-        super(chessboardPoint, location, ChessColor.NONE, listener, size);
+    public EmptySlotComponent(ChessboardPoint chessboardPoint, Point location, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, ChessColor.NONE, listener, size,chessboard);
     }
 
     @Override

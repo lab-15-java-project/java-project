@@ -3,13 +3,17 @@ package controller;
 import model.*;
 import view.ChessGameFrame;
 import view.Chessboard;
+import view.ChessboardPoint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.Objects;
 
 
-public class ClickController extends JFrame{
+public class ClickController extends JFrame implements draw {
     private  Chessboard chessboard;
     private ChessComponent first;
     ChessGameFrame chessGameFrame;
@@ -21,67 +25,71 @@ public class ClickController extends JFrame{
         this.chessGameFrame=chessGameFrame;
     }
 
+    @Override
     public void onClick(ChessComponent chessComponent) {
+        ChessComponent[][] array=chessboard.getChessComponents();
         if (first == null) {
             if (handleFirst(chessComponent)) {
                 chessComponent.setSelected(true);
                 first = chessComponent;
                 first.repaint();
+                first.getList().clear();
                 first.getCanMoveTo(chessboard.getChessComponents(), chessboard.getArrayList(),chessboard);
-                repaint();
+                if (!chessboard.getCheckMating()||first instanceof KingChessComponent){
+                    for (int i=0;i<first.getList().size();i++){
+                        array[first.getList().get(i).getX()][first.getList().get(i).getY()].setSomeoneSelected(true);
+                        array[first.getList().get(i).getX()][first.getList().get(i).getY()].repaint();
+                    }
+                }
+                 if (chessboard.getCheckMating()){
+                    for (int i=0;i<first.getSpecialList().size();i++){
+                        array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].setSomeoneSelected(true);
+                        array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].repaint();
+                    }
+                }
             }
         } else {
             if (first == chessComponent) { // 再次点击取消选取
-                first.getList().subList(0,first.getList().size()).clear();
                 chessComponent.setSelected(false);
+                first.getList().clear();
+                first.getCanMoveTo(chessboard.getChessComponents(), chessboard.getArrayList(),chessboard);
+                if (!chessboard.getCheckMating()||first instanceof KingChessComponent){
+                    for (int i=0;i<chessComponent.getList().size();i++){
+                        array[first.getList().get(i).getX()][first.getList().get(i).getY()].setSomeoneSelected(false);
+                        array[first.getList().get(i).getX()][first.getList().get(i).getY()].repaint();
+                    }
+                }
+                if (chessboard.getCheckMating()){
+                    for (int i=0;i<first.getSpecialList().size();i++){
+                        array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].setSomeoneSelected(false);
+                        array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].repaint();
+                    }
+                }
                 ChessComponent recordFirst = first;
+                first.getList().clear();
                 first = null;
                 recordFirst.repaint();
             } else if (handleSecond(chessComponent)) {
+                first.getCanMoveTo(chessboard.getChessComponents(),chessboard.getArrayList(),chessboard);
+                if (!chessboard.getCheckMating()||first instanceof KingChessComponent){
+                    for (int i=0;i<first.getList().size();i++){
+                        array[first.getList().get(i).getX()][first.getList().get(i).getY()].setSomeoneSelected(false);
+                        array[first.getList().get(i).getX()][first.getList().get(i).getY()].repaint();
+                    }
+                }
+                if (chessboard.getCheckMating()){
+                    for (int i=0;i<first.getSpecialList().size();i++){
+                        array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].setSomeoneSelected(false);
+                        array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].repaint();
+                    }
+                }
+                chessComponent.setSomeoneSelected(false);
+                chessComponent.repaint();
                 //repaint in swap chess method.
                 chessboard.swapChessComponents(first, chessComponent);
-                if (Objects.equals(first.toString(), "p")&&first.getChessColor()== ChessColor.BLACK&&first.getChessboardPoint().getX()==7){
-                    Object[] o={"Bishop","Queen","Rook","Knight"};
-                    int optional=JOptionPane.showOptionDialog(null,"Promote to:","Promotion", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Queen");
-                    chessboard.remove(first);
-                    switch (optional){
-                        case 0:
-                            chessboard.initBishopOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                        case 1:
-                            chessboard.initQueenOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                        case 2:
-                            chessboard.initRookOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                        case 3:
-                            chessboard.initKnightOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                    }
-                }
-                if (Objects.equals(first.toString(), "P")&&first.getChessColor()== ChessColor.WHITE&&first.getChessboardPoint().getX()==0){
-                    Object[] o={"Bishop","Queen","Rook","Knight"};
-                    int optional=JOptionPane.showOptionDialog(null,"Promote to:","Promotion", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Queen");
-                    chessboard.remove(first);
-                    switch (optional){
-                        case 0:
-                            chessboard.initBishopOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                        case 1:
-                            chessboard.initQueenOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                        case 2:
-                            chessboard.initRookOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                        case 3:
-                            chessboard.initKnightOnBoard(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first.getChessColor());
-                            break;
-                    }
-                }
-                chessboard.Check();
-                chessboard.repaint();
                 chessboard.swapColor();
-                chessGameFrame.changeCurrentPlayer("Current action player : "+chessboard.getCurrentColor());
+
+                //吃过路兵
                 if (first instanceof PawnChessComponent&&((PawnChessComponent) first).getMove()==1){
                     if (first.getChessboardPoint().getY()>0&&first.getChessboardPoint().getY()<7){
                         if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent
@@ -92,15 +100,13 @@ public class ClickController extends JFrame{
                             if (a==0){
                                 remove(first);
                                 chessboard.getArrayList().remove(first);
-                                add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE()));
+                                add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE(),chessboard));
                                 chessboard.getArrayList().add(first);
                                 chessboard.setChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first);
                                 chessboard.swapColor();
-                                chessGameFrame.changeCurrentPlayer("Current action player : "+chessboard.getCurrentColor());
                                 chessboard.repaint();
                             }
                         }
-
                         if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent
                                 &&!(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent)
                                 &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1).getChessColor()!=first.getChessColor()){
@@ -109,16 +115,15 @@ public class ClickController extends JFrame{
                     }
                 }
                 first.setSelected(false);
-                System.out.println(first.getChessColor());
                 repaint();
                 first = null;
                 repaint();
-                String str = "Current action player : "+chessboard.getCurrentColor();
                 if (chessboard.getCheckMating()){
                     JOptionPane.showMessageDialog(null,"checkmate!","situation",JOptionPane.WARNING_MESSAGE );
                 }
             }
         }
+        chessboard.repaint();
     }
 
     /**
@@ -138,5 +143,11 @@ public class ClickController extends JFrame{
     private boolean handleSecond(ChessComponent chessComponent) {
         return chessComponent.getChessColor() != chessboard.getCurrentColor() &&
                 first.canMoveTo(chessboard.getChessComponents(), chessComponent.getChessboardPoint(),chessboard.getArrayList(),chessboard);
+    }
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponents(g);
+        g.setColor(Color.RED);
+        g.fillOval(0, 0, this.getWidth(), this.getHeight());
     }
 }

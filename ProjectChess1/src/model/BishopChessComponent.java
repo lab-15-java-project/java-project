@@ -41,8 +41,8 @@ public class BishopChessComponent extends ChessComponent{
         }
     }
 
-    public BishopChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
+    public BishopChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, color, listener, size,chessboard);
         initiateBishopImage(color);
     }
 
@@ -172,6 +172,7 @@ public class BishopChessComponent extends ChessComponent{
         }
         return list1;
     }
+
 
     @Override
     public List<ChessboardPoint> getList() {

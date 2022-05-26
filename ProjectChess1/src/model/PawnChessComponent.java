@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PawnChessComponent extends ChessComponent implements Promotion{
+public class PawnChessComponent extends ChessComponent {
 
     private static Image Pawn_WHITE;
     private static Image Pawn_BLACK;
@@ -48,8 +48,8 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
         }
     }
 
-    public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
+    public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size,Chessboard chessboard) {
+        super(chessboardPoint, location, color, listener, size,chessboard);
         initiatePawnImage(color);
     }
 
@@ -77,34 +77,6 @@ public class PawnChessComponent extends ChessComponent implements Promotion{
             return "P";
         }
         else return "p";
-    }
-    @Override
-    public  boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination, List<ChessComponent> arrayList, Chessboard chessboard){
-        list.subList(0,list.size()).clear();
-        getCanMoveTo(chessComponents,arrayList,chessboard);
-        if (chessboard.getCheckMating()){
-            specialGetCanMoveTo(chessComponents,arrayList,chessboard);
-            for (int i=0;i<specialList.size();i++){
-                if (specialList.get(i).getX()==destination.getX()&&specialList.get(i).getY()==destination.getY()){
-                    specialList.subList(0, specialList.size()).clear();
-                    list.subList(0,list.size()).clear();
-                    move++;
-                    return true;
-                }
-            }
-            specialList.subList(0, specialList.size()).clear();
-            list.subList(0,list.size()).clear();
-            return false;
-        }
-        for (int i=0;i<list.size();i++){
-            if (list.get(i).getX()==destination.getX()&&list.get(i).getY()==destination.getY()){
-                list.subList(0, list.size()).clear();
-                move++;
-                return true;
-            }
-        }
-        list.subList(0, list.size()).clear();
-        return false;
     }
     @Override
     public List<ChessboardPoint> getCanMoveTo(ChessComponent[][] chessComponents, List<ChessComponent> arrayList, Chessboard chessboard) {

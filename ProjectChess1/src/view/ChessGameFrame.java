@@ -32,6 +32,7 @@ public class ChessGameFrame extends JFrame {
 
         JFileChooser jFileChooser = new JFileChooser("./");
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        addChessboard();
         chessboard.setX(Width);
         chessboard.setY(Height);
         //button1为加载按钮
@@ -60,7 +61,7 @@ public class ChessGameFrame extends JFrame {
         button2.setFont(new Font("Times New Roman", Font.BOLD, 20));
         add(button2);
         button2.addActionListener(e -> {
-            int optionDialog= JOptionPane.showOptionDialog(null, "Who comes first?", "Start", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"BLACK", "WHITE"}, "BLACK");
+            int optionDialog= JOptionPane.showOptionDialog(null, "Who comes first?", "Start", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"BLACK", "WHITE"}, "WHITE");
             chessboard.setCurrentColor(optionDialog==0?ChessColor.BLACK:ChessColor.WHITE);
             changeCurrentPlayer("Current action player : "+chessboard.getCurrentColor());
             repaint();
