@@ -27,6 +27,7 @@ public abstract class ChessComponent extends JComponent {
    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
     private static final Color[] BACKGROUND_COLORS = {Color.WHITE, Color.BLACK};
     Chessboard chessboard;
+    protected int move=0;
     /**
      * handle click event
      */
@@ -92,6 +93,10 @@ public abstract class ChessComponent extends JComponent {
         this.selected = selected;
     }
 
+    public int getMove() {
+        return move;
+    }
+
     /**
      * @param another 主要用于和另外一个棋子交换位置
      *                <br>
@@ -142,6 +147,7 @@ public abstract class ChessComponent extends JComponent {
             for (int i=0;i<specialList.size();i++){
                 if (specialList.get(i).getX()==destination.getX()&&specialList.get(i).getY()==destination.getY()){
                     specialList.subList(0, specialList.size()).clear();
+                    move++;
                     return true;
                 }
             }
@@ -150,6 +156,7 @@ public abstract class ChessComponent extends JComponent {
         }
         for (int i=0;i<list.size();i++){
             if (list.get(i).getX()==destination.getX()&&list.get(i).getY()==destination.getY()){
+                move++;
                 return true;
             }
         }

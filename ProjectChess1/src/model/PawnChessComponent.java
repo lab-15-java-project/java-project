@@ -18,7 +18,7 @@ public class PawnChessComponent extends ChessComponent {
 
     private Image PawnImage;
     private List<ChessboardPoint> defeatRange=new ArrayList<>();
-    private int move=0;
+
 
     //读取加载车棋子的图片
     public void loadResource() throws IOException {

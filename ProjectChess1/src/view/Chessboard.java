@@ -1,9 +1,11 @@
 package view;
 
+import javafx.animation.TranslateTransition;
 import model.*;
 import controller.ClickController;
 
 import javax.swing.*;
+import javax.xml.soap.Node;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
