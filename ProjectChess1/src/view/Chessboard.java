@@ -1,9 +1,11 @@
 package view;
 
+import javafx.animation.TranslateTransition;
 import model.*;
 import controller.ClickController;
 
 import javax.swing.*;
+import javax.xml.soap.Node;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -165,20 +167,20 @@ public class Chessboard extends JComponent{
 
     public void initiateTheNormalGame(){
         initiateEmptyChessboard();
-        //initRookOnBoard(0,0, ChessColor.BLACK);
-       // initRookOnBoard(0,7,ChessColor.BLACK);
-       // initRookOnBoard(7,0,ChessColor.WHITE);
+        initRookOnBoard(0,0, ChessColor.BLACK);
+        initRookOnBoard(0,7,ChessColor.BLACK);
+        initRookOnBoard(7,0,ChessColor.WHITE);
         initRookOnBoard(7,7,ChessColor.WHITE);
-        initKingOnBoard(0,3,ChessColor.BLACK);
-        initKingOnBoard(7,3,ChessColor.WHITE);
-        initQueenOnBoard(0,4,ChessColor.BLACK);
-        initQueenOnBoard(7,4,ChessColor.WHITE);
-       //for (int i = 0; i < 8; i++) {
-            //initPawnOnBoard(1,i,ChessColor.BLACK);
-            //initPawnOnBoard(6,i,ChessColor.WHITE);
-        //}
-        //initKnightOnBoard(0,1,ChessColor.BLACK);
-        //initKnightOnBoard(0,6,ChessColor.BLACK);
+        initKingOnBoard(0,4,ChessColor.BLACK);
+        initKingOnBoard(7,4,ChessColor.WHITE);
+        initQueenOnBoard(0,3,ChessColor.BLACK);
+        initQueenOnBoard(7,3,ChessColor.WHITE);
+       for (int i = 0; i < 8; i++) {
+            initPawnOnBoard(1,i,ChessColor.BLACK);
+            initPawnOnBoard(6,i,ChessColor.WHITE);
+        }
+        initKnightOnBoard(0,1,ChessColor.BLACK);
+        initKnightOnBoard(0,6,ChessColor.BLACK);
         initKnightOnBoard(7,1,ChessColor.WHITE);
         initKnightOnBoard(7,6,ChessColor.WHITE);
         initBishopOnBoard(0,2,ChessColor.BLACK);

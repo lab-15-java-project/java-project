@@ -17,6 +17,7 @@ public class ClickController extends JFrame implements draw {
     private  Chessboard chessboard;
     private ChessComponent first;
     ChessGameFrame chessGameFrame;
+    private boolean q=false;
 
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
@@ -27,6 +28,7 @@ public class ClickController extends JFrame implements draw {
 
     @Override
     public void onClick(ChessComponent chessComponent) {
+        q=false;
         ChessComponent[][] array=chessboard.getChessComponents();
         if (first == null) {
             if (handleFirst(chessComponent)) {
@@ -97,21 +99,66 @@ public class ClickController extends JFrame implements draw {
                                 &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1).getChessColor()!=first.getChessColor()){
                             String[] o={"Yes","No"};
                             int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
-                            if (a==0){
-                                remove(first);
-                                chessboard.getArrayList().remove(first);
-                                add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE(),chessboard));
-                                chessboard.getArrayList().add(first);
-                                chessboard.setChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first);
-                                chessboard.swapColor();
-                                chessboard.repaint();
-                            }
+                            left(a);
                         }
                         if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent
                                 &&!(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent)
                                 &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1).getChessColor()!=first.getChessColor()){
-                            JOptionPane.showConfirmDialog(null,"En passant？","En passant",JOptionPane.YES_NO_OPTION);
+                            String[] o={"Yes","No"};
+                            int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
+                            right(a);
                         }
+                        if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1).getChessColor()!=first.getChessColor()
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1).getChessColor()==first.getChessColor()){
+                            String[] o={"Yes","No"};
+                            int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
+                            right(a);
+                        }
+                        if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1).getChessColor()==first.getChessColor()
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1).getChessColor()!=first.getChessColor()){
+                            String[] o={"Yes","No"};
+                            int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
+                            left(a);
+                        }
+                        if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1).getChessColor()!=first.getChessColor()
+                                &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1).getChessColor()!=first.getChessColor()){
+                            String[] o={"Yes","No"};
+                            int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
+                            if (a==0){
+                                String[] o1={"Left","Right"};
+                                int a1=JOptionPane.showOptionDialog(null,"Which one?","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o1,"left");
+                                if (a1==1){
+                                    right(a);
+                                }
+                                else {
+                                    left(a);
+                                }
+                            }
+                        }
+                    }
+                    if (first.getChessboardPoint().getY()==0
+                            &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent
+                            &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1).getChessColor()!=first.getChessColor()){
+                        String[] o={"Yes","No"};
+                        int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
+                        right(a);
+
+                    }
+                    if (first.getChessboardPoint().getY()==7
+                            &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent
+                            &&chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1).getChessColor()!=first.getChessColor()){
+                        String[] o={"Yes","No"};
+                        int a=JOptionPane.showOptionDialog(null,"En passant？","En passant",JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,null,o,"Yes");
+                        left(a);
+                    }
+                    if (q){
+                        chessboard.swapColor();
                     }
                 }
                 first.setSelected(false);
@@ -119,7 +166,7 @@ public class ClickController extends JFrame implements draw {
                 first = null;
                 repaint();
                 if (chessboard.getCheckMating()){
-                    JOptionPane.showMessageDialog(null,"checkmate!","situation",JOptionPane.WARNING_MESSAGE );
+                    JOptionPane.showMessageDialog(null,"Check!","situation",JOptionPane.WARNING_MESSAGE );
                 }
             }
         }
@@ -149,5 +196,53 @@ public class ClickController extends JFrame implements draw {
         super.paintComponents(g);
         g.setColor(Color.RED);
         g.fillOval(0, 0, this.getWidth(), this.getHeight());
+    }
+    public void left(int a){
+        if (a==0&&chessboard.getCurrentColor()==ChessColor.BLACK){
+            chessboard.remove(first);
+            chessboard.getArrayList().remove(first);
+            chessboard.add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE(),chessboard));
+            chessboard.getArrayList().add(first);
+            chessboard.setChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first);
+            chessboard.swapChessComponents(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1),chessboard.getChess(first.getChessboardPoint().getX()+1,first.getChessboardPoint().getY()));
+            chessboard.repaint();
+            first.repaint();
+            q=true;
+        }
+        if (a==0&&chessboard.getCurrentColor()==ChessColor.WHITE){
+            chessboard.remove(first);
+            chessboard.getArrayList().remove(first);
+            chessboard.add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE(),chessboard));
+            chessboard.getArrayList().add(first);
+            chessboard.setChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first);
+            chessboard.swapChessComponents(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1),chessboard.getChess(first.getChessboardPoint().getX()-1,first.getChessboardPoint().getY()));
+            chessboard.repaint();
+            first.repaint();
+            q=true;
+        }
+    }
+    public void right(int a){
+        if (a==0&&chessboard.getCurrentColor()==ChessColor.BLACK){
+            chessboard.remove(first);
+            chessboard.getArrayList().remove(first);
+            chessboard.add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE(),chessboard));
+            chessboard.getArrayList().add(first);
+            chessboard.setChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first);
+            chessboard.swapChessComponents(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1),chessboard.getChess(first.getChessboardPoint().getX()+1,first.getChessboardPoint().getY()));
+            chessboard.repaint();
+            first.repaint();
+            q=true;
+        }
+        if (a==0&&chessboard.getCurrentColor()==ChessColor.WHITE){
+            chessboard.remove(first);
+            chessboard.getArrayList().remove(first);
+            chessboard.add(first=new EmptySlotComponent(first.getChessboardPoint(),first.getLocation(),chessboard.getClickController(),chessboard.getCHESS_SIZE(),chessboard));
+            chessboard.getArrayList().add(first);
+            chessboard.setChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY(),first);
+            chessboard.swapChessComponents(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1),chessboard.getChess(first.getChessboardPoint().getX()-1,first.getChessboardPoint().getY()));
+            chessboard.repaint();
+            first.repaint();
+            q=true;
+        }
     }
 }

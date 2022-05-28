@@ -6,14 +6,15 @@ import java.io.*;
 
 import controller.ClickController;
 import controller.GameController;
-import model.ChessColor;
-import model.ChessComponent;
+import model.*;
 
 public class ChessGameFrame extends JFrame {
     private  int Width;
     private  int Height;
     private  int ChessBoard_size;
     private GameController gameController;
+    private boolean isCastlingBlack =false;
+    private boolean isCastlingWhite =false;
 
     Chessboard chessboard;
     private ClickController clickController=new ClickController(this);
@@ -67,7 +68,186 @@ public class ChessGameFrame extends JFrame {
             repaint();
             label.repaint();
             chessboard.initiateTheNormalGame();
-
+            JButton button5 = new JButton("Castling");
+            button5.setLocation(Height ,Height / 10 );
+            button5.setSize(195, 40);
+            button5.setFont(new Font("Times New Roman", Font.BOLD, 20));
+            add(button5);
+            button5.addActionListener(c -> {
+                if (chessboard.getCheckMating()){
+                    JOptionPane.showMessageDialog(null,"Is Checking!","Error!",JOptionPane.WARNING_MESSAGE);
+                }
+                else{
+                    boolean isAttacked =false;
+                    boolean isDone=false;
+                    if (chessboard.getCurrentColor()==ChessColor.BLACK){
+                        if (isCastlingBlack){
+                            JOptionPane.showMessageDialog(null,"You have operated it!","Error!",JOptionPane.WARNING_MESSAGE);
+                        }
+                        else {
+                            int option= JOptionPane.showOptionDialog(null, "Castling?", "Castling", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Castle Kingside", "Castle Queenside","Cancel"}, "Cancel");
+                            if (option==0){
+                                if (chessboard.getChess(0,7).getMove()!=0||chessboard.getChess(0,4).getMove()!=0){
+                                    JOptionPane.showMessageDialog(null,"You have moved the chess!","Error!",JOptionPane.WARNING_MESSAGE);
+                                }
+                                else {
+                                    if (!(chessboard.getChess(0,6) instanceof EmptySlotComponent&&chessboard.getChess(0,5) instanceof EmptySlotComponent)){
+                                        JOptionPane.showMessageDialog(null,"There is something blocking!","Error!",JOptionPane.WARNING_MESSAGE);
+                                    }
+                                    else {
+                                        for (int i=0;i<chessboard.getArrayList().size();i++){
+                                            if (chessboard.getArrayList().get(i).getChessColor()==ChessColor.BLACK){
+                                                continue;
+                                            }
+                                            for (int j=0;j<chessboard.getArrayList().get(i).getList().size();j++){
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==0&&chessboard.getArrayList().get(i).getList().get(j).getY()==5){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==0&&chessboard.getArrayList().get(i).getList().get(j).getY()==6){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                            }
+                                            if (isAttacked){
+                                                JOptionPane.showMessageDialog(null,"The King will be attacked!","Error!",JOptionPane.WARNING_MESSAGE);
+                                                break;}
+                                        }
+                                        if (!isAttacked){
+                                            chessboard.swapChessComponents(chessboard.getChess(0,4),chessboard.getChess(0,6));
+                                            chessboard.swapChessComponents(chessboard.getChess(0,7),chessboard.getChess(0,5));
+                                            isCastlingBlack=true;
+                                            chessboard.repaint();
+                                            chessboard.swapColor();
+                                            isDone=true;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (option==1){
+                                if (chessboard.getChess(0,0).getMove()!=0||chessboard.getChess(0,4).getMove()!=0){
+                                    JOptionPane.showMessageDialog(null,"You have moved the chess!","Error!",JOptionPane.WARNING_MESSAGE);
+                                }
+                                else {
+                                    if (!(chessboard.getChess(0,2) instanceof EmptySlotComponent&&chessboard.getChess(0,3) instanceof EmptySlotComponent&&chessboard.getChess(0,1) instanceof EmptySlotComponent)){
+                                        JOptionPane.showMessageDialog(null,"There is something blocking!","Error!",JOptionPane.WARNING_MESSAGE);
+                                    }
+                                    else {
+                                        for (int i=0;i<chessboard.getArrayList().size();i++){
+                                            if (chessboard.getArrayList().get(i).getChessColor()==ChessColor.BLACK){
+                                                continue;
+                                            }
+                                            for (int j=0;j<chessboard.getArrayList().get(i).getList().size();j++){
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==0&&chessboard.getArrayList().get(i).getList().get(j).getY()==3){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==0&&chessboard.getArrayList().get(i).getList().get(j).getY()==2){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                            }
+                                            if (isAttacked){
+                                                JOptionPane.showMessageDialog(null,"The King will be attacked!","Error!",JOptionPane.WARNING_MESSAGE);
+                                                break;}
+                                        }
+                                        if (!isAttacked){
+                                            chessboard.swapChessComponents(chessboard.getChess(0,4),chessboard.getChess(0,2));
+                                            chessboard.swapChessComponents(chessboard.getChess(0,0),chessboard.getChess(0,3));
+                                            isCastlingBlack=true;
+                                            chessboard.repaint();
+                                            chessboard.swapColor();
+                                            isDone=true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (chessboard.getCurrentColor()==ChessColor.WHITE&&!isDone){
+                        if (isCastlingWhite){
+                            JOptionPane.showMessageDialog(null,"You have operated it!","Error!",JOptionPane.WARNING_MESSAGE);
+                        }
+                        else {
+                            int option= JOptionPane.showOptionDialog(null, "Castling?", "Castling", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Castle Kingside", "Castle Queenside","Cancel"}, "Cancel");
+                            if (option==0){
+                                if (chessboard.getChess(7,7).getMove()!=0||chessboard.getChess(7,4).getMove()!=0){
+                                    JOptionPane.showMessageDialog(null,"You have moved the chess!","Error!",JOptionPane.WARNING_MESSAGE);
+                                }
+                                else {
+                                    if (!(chessboard.getChess(7,6) instanceof EmptySlotComponent&&chessboard.getChess(7,5) instanceof EmptySlotComponent)){
+                                        JOptionPane.showMessageDialog(null,"There is something blocking!","Error!",JOptionPane.WARNING_MESSAGE);
+                                    }
+                                    else {
+                                        for (int i=0;i<chessboard.getArrayList().size();i++){
+                                            if (chessboard.getArrayList().get(i).getChessColor()==ChessColor.WHITE){
+                                                continue;
+                                            }
+                                            for (int j=0;j<chessboard.getArrayList().get(i).getList().size();j++){
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==7&&chessboard.getArrayList().get(i).getList().get(j).getY()==5){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==7&&chessboard.getArrayList().get(i).getList().get(j).getY()==6){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                            }
+                                            if (isAttacked){
+                                                JOptionPane.showMessageDialog(null,"The King will be attacked!","Error!",JOptionPane.WARNING_MESSAGE);
+                                                break;}
+                                        }
+                                        if (!isAttacked){
+                                            chessboard.swapChessComponents(chessboard.getChess(7,4),chessboard.getChess(7,6));
+                                            chessboard.swapChessComponents(chessboard.getChess(7,7),chessboard.getChess(7,5));
+                                            isCastlingWhite=true;
+                                            chessboard.repaint();
+                                            chessboard.swapColor();
+                                        }
+                                    }
+                                }
+                            }
+                            else if (option==1){
+                                if (chessboard.getChess(7,0).getMove()!=0||chessboard.getChess(7,4).getMove()!=0){
+                                    JOptionPane.showMessageDialog(null,"You have moved the chess!","Error!",JOptionPane.WARNING_MESSAGE);
+                                }
+                                else {
+                                    if (!(chessboard.getChess(7,2) instanceof EmptySlotComponent&&chessboard.getChess(7,3) instanceof EmptySlotComponent&&chessboard.getChess(7,1) instanceof EmptySlotComponent)){
+                                        JOptionPane.showMessageDialog(null,"There is something blocking!","Error!",JOptionPane.WARNING_MESSAGE);
+                                    }
+                                    else {
+                                        for (int i=0;i<chessboard.getArrayList().size();i++){
+                                            if (chessboard.getArrayList().get(i).getChessColor()==ChessColor.WHITE){
+                                                continue;
+                                            }
+                                            for (int j=0;j<chessboard.getArrayList().get(i).getList().size();j++){
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==7&&chessboard.getArrayList().get(i).getList().get(j).getY()==3){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                                if (chessboard.getArrayList().get(i).getList().get(j).getX()==7&&chessboard.getArrayList().get(i).getList().get(j).getY()==2){
+                                                    isAttacked=true;
+                                                    break;
+                                                }
+                                            }
+                                            if (isAttacked){
+                                                JOptionPane.showMessageDialog(null,"The King will be attacked!","Error!",JOptionPane.WARNING_MESSAGE);
+                                                break;}
+                                        }
+                                        if (!isAttacked){
+                                            chessboard.swapChessComponents(chessboard.getChess(7,4),chessboard.getChess(7,2));
+                                            chessboard.swapChessComponents(chessboard.getChess(7,0),chessboard.getChess(7,3));
+                                            isCastlingWhite=true;
+                                            chessboard.repaint();
+                                            chessboard.swapColor();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         });
 
         //button3为储存按钮
