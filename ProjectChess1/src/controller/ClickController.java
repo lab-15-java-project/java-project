@@ -43,7 +43,7 @@ public class ClickController extends JFrame implements draw {
                         array[first.getList().get(i).getX()][first.getList().get(i).getY()].repaint();
                     }
                 }
-                 if (chessboard.getCheckMating()){
+                if (chessboard.getCheckMating()){
                     for (int i=0;i<first.getSpecialList().size();i++){
                         array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].setSomeoneSelected(true);
                         array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].repaint();
@@ -92,7 +92,7 @@ public class ClickController extends JFrame implements draw {
                 chessboard.swapColor();
 
                 //吃过路兵
-                if (first instanceof PawnChessComponent&&((PawnChessComponent) first).getMove()==1){
+                if (first instanceof PawnChessComponent&&((PawnChessComponent) first).getMove()==1&&(first.getChessboardPoint().getX()==3||first.getChessboardPoint().getX()==4)){
                     if (first.getChessboardPoint().getY()>0&&first.getChessboardPoint().getY()<7){
                         if (chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()-1)instanceof PawnChessComponent
                                 &&!(chessboard.getChess(first.getChessboardPoint().getX(),first.getChessboardPoint().getY()+1)instanceof PawnChessComponent)

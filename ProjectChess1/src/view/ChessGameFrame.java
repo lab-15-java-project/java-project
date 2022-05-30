@@ -73,6 +73,8 @@ public class ChessGameFrame extends JFrame {
             button5.setSize(195, 40);
             button5.setFont(new Font("Times New Roman", Font.BOLD, 20));
             add(button5);
+            isCastlingWhite=false;
+            isCastlingBlack=false;
             button5.addActionListener(c -> {
                 if (chessboard.getCheckMating()){
                     JOptionPane.showMessageDialog(null,"Is Checking!","Error!",JOptionPane.WARNING_MESSAGE);
