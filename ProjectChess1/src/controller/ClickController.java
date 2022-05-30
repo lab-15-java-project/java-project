@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ClickController extends JFrame implements draw {
+public class ClickController extends JFrame {
     private  Chessboard chessboard;
     private ChessComponent first;
     ChessGameFrame chessGameFrame;
@@ -26,7 +26,7 @@ public class ClickController extends JFrame implements draw {
         this.chessGameFrame=chessGameFrame;
     }
 
-    @Override
+
     public void onClick(ChessComponent chessComponent) {
         q=false;
         ChessComponent[][] array=chessboard.getChessComponents();
@@ -191,7 +191,6 @@ public class ClickController extends JFrame implements draw {
         return chessComponent.getChessColor() != chessboard.getCurrentColor() &&
                 first.canMoveTo(chessboard.getChessComponents(), chessComponent.getChessboardPoint(),chessboard.getArrayList(),chessboard);
     }
-    @Override
     public void paintComponent(Graphics g) {
         super.paintComponents(g);
         g.setColor(Color.RED);
