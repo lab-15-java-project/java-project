@@ -80,11 +80,13 @@ public class ClickController extends JFrame {
                     }
                 }
                 if (chessboard.getCheckMating()){
+                    first.specialGetCanMoveTo(chessboard.getChessComponents(),chessboard.getArrayList(),chessboard);
                     for (int i=0;i<first.getSpecialList().size();i++){
                         array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].setSomeoneSelected(false);
                         array[first.getSpecialList().get(i).getX()][first.getSpecialList().get(i).getY()].repaint();
                     }
                 }
+                first.getSpecialList().clear();
                 chessComponent.setSomeoneSelected(false);
                 chessComponent.repaint();
                 //repaint in swap chess method.

@@ -175,7 +175,7 @@ public class Chessboard extends JComponent{
         initKingOnBoard(7,4,ChessColor.WHITE);
         initQueenOnBoard(0,3,ChessColor.BLACK);
         initQueenOnBoard(7,3,ChessColor.WHITE);
-       for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             initPawnOnBoard(1,i,ChessColor.BLACK);
             initPawnOnBoard(6,i,ChessColor.WHITE);
         }
