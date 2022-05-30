@@ -176,6 +176,7 @@ public abstract class ChessComponent extends JComponent {
             g.setColor(Color.RED);
             g.fillOval(24, 24, this.getWidth()/4, this.getHeight()/4);
             isDraw=true;
+            chessboard.repaint();
         }
         if (!someoneSelected&&isDraw) {
             Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
